@@ -53,3 +53,4 @@ dkms.conf
 
 # Dist
 dist/
+node_modules/

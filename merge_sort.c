@@ -9,85 +9,68 @@
 
 #include <stdio.h>
 
-// Function to merge two subarrays of arr[].
-// First subarray is arr[l..m]
-// Second subarray is arr[m+1..r]
-void merge(int arr[], int l, int m, int r) { 
-		printf("%d %d %d ", l, m, r);
-    int n1 = m - l + 1;
-    int n2 = r - m;
-
-    // Create temp arrays
-    int L[n1], R[n2];
-
-    // Copy data to temp arrays L[] and R[]
-    for (int i = 0; i < n1; i++)
-        L[i] = arr[l + i];
-    for (int j = 0; j < n2; j++)
-        R[j] = arr[m + 1 + j];
-
-    // Merge the temp arrays back into arr[l..r]
-    int i = 0, j = 0, k = l;
-    while (i < n1 && j < n2) {
-        if (L[i] <= R[j]) {
-            arr[k] = L[i];
-            i++;
-        } else {
-            arr[k] = R[j];
-            j++;
-        }
-        k++;
-    }
-
-    // Copy the remaining elements of L[], if there are any
-    while (i < n1) {
-        arr[k] = L[i];
-        i++;
-        k++;
-    }
-
-    // Copy the remaining elements of R[], if there are any
-    while (j < n2) {
-        arr[k] = R[j];
-        j++;
-        k++;
-    }
+void printMotherFuckingArray(int A[], int size) {
+	for(int i = 0; i < size; i++) {
+		printf("%d ", A[i]);
+	}
+	printf("\n");
 }
 
+void merge(int* left, int leftSize, int* right, int rightSize, int* resultArray) {
+	int leftIndex = 0;
+	int rightIndex = 0;
+	int resultIndex = 0;
 
-// Function to print an array
-void printArray(int A[], int size) {
-    for (int i = 0; i < size; i++)
-        printf("%d ", A[i]);
-    printf("\n");
+	while (leftIndex < leftSize && rightIndex < rightSize) {
+		if (left[leftIndex] < right[rightIndex]) {
+				resultArray[resultIndex++] = left[leftIndex++];
+		} else {
+				resultArray[resultIndex++] = right[rightIndex++];
+		}
+	}
+
+	while (leftIndex < leftSize) {
+			resultArray[resultIndex++] = left[leftIndex++];
+	}
+	while (rightIndex < rightSize) {
+			resultArray[resultIndex++] = right[rightIndex++];
+	}
 }
 
-// l is for left index and r is right index of the sub-array of arr to be sorted
-void mergeSort(int arr[], int l, int r) {
-    if (l < r) {
-        // Same as (l+r)/2, but avoids overflow for large l and r
-        int m = l + (r - l) / 2;
+void mergeSort(int* arr, int size) {
+	if (size <= 1) {
+		return;
+	}
+  
+  int middle = size / 2;
+	int left[middle];
+	int right[size - middle];
 
-        // Sort first and second halves
-        mergeSort(arr, l, m);
-        mergeSort(arr, m + 1, r);
+	for(int i = 0; i < middle; i++) {
+		left[i] = arr[i];
+	}
+	
+	for(int j = middle; j < size; j++) {
+		right[j - middle] = arr[j];
+	}
 
-        // Merge the sorted halves
-				merge(arr, l, m, r);
-    }
+	mergeSort(left, middle);
+	mergeSort(right, size - middle);
+
+	int resultArray[size];
+	merge(left, middle, right, size - middle, resultArray);
+
+	for(int i = 0; i < size; i++) {
+		arr[i] = resultArray[i];
+	};
 }
-
 
 int main() {
-    int arr[] = {12, 11, 13, 5, 6, 7, 1};
-    int arr_size = sizeof(arr) / sizeof(arr[0]);
+	int arr[] = {38, 27, 43, 3, 9, 82, 10};
+	int size = sizeof(arr) / sizeof(arr[0]);
 
-    printf("Given array is \n");
-    printArray(arr, arr_size);
+	mergeSort(arr, size);
 
-    mergeSort(arr, 0, arr_size - 1);
-
-    printf("\nSorted array is \n");
-    printArray(arr, arr_size);
-    return 0;
+  printMotherFuckingArray(arr, size);
+	return 0;
 }
